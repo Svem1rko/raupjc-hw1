@@ -1,0 +1,107 @@
+using System;
+
+namespace ListGeneric
+{
+    public class GenericList <X> : IGenericList<X>
+    {
+        private X[] _internalStorage;
+        private int size;
+        public int Count { get; private set; }
+
+        public GenericList()
+        {
+            size = 4;
+            _internalStorage = new X[size];
+        }
+
+        public GenericList(int initalSize)
+        {
+            if (initalSize > 0)
+            {
+                size = initalSize;
+                _internalStorage = new X[size];
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("Broj elemenata ne moze biti negativan");
+            }
+        }
+
+        public void Add(X item)
+        {
+            if (Count == size)
+            {
+                size *= 2;
+                X[] novo = new X[size];
+
+                for (int i = 0; i < Count; i++)
+                    novo[i] = _internalStorage[i];
+
+                _internalStorage = novo;
+            }
+
+            _internalStorage[Count++] = item;
+        }
+
+        public bool RemoveAt(int index)
+        {
+            if (index >= Count || index < 0)
+            {
+                throw new IndexOutOfRangeException("Index izvan spremnika");
+            }
+            else
+            {
+                for (int i = index; i < Count - 1; i++)
+                    _internalStorage[i] = _internalStorage[i + 1];
+
+                Count--;
+                return true;
+            }
+        }
+
+        public bool Remove(X item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i].Equals(item)) return RemoveAt(i);
+            }
+            return false;
+        }
+
+        public X GetElement(int index)
+        {
+            if (index < Count && index >= 0)
+            {
+                return _internalStorage[index];
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("Index izvan spremnika");
+            }
+        }
+
+        public int IndexOf(X item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i].Equals(item))
+                    return i;
+            }
+            return -1;
+        }
+
+        public void Clear()
+        {
+            Count = 0;
+        }
+
+        public bool Contains(X item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i].Equals(item)) return true;
+            }
+            return false;
+        }
+    }
+}
