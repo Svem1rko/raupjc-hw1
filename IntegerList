@@ -1,0 +1,110 @@
+using sucelje;
+using System;
+
+
+namespace ListInteger
+{
+    public class IntegerList : IIntegerList
+    {
+        private int[] _internalStorage;
+        private int size;
+        public int Count { get; private set; } = 0;
+
+        public IntegerList()
+        {
+            size = 4;
+            _internalStorage = new int[size];
+        }
+
+        public IntegerList(int initalSize)
+        {
+            if (initalSize > 0)
+            {
+                size = initalSize;
+                _internalStorage = new int[size];
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("Broj elemenata ne moze biti negativan");
+            }
+            
+        }
+
+        public void Add(int item)
+        {
+            if (Count == size)
+            {
+                size *= 2;
+                int[] novo = new int[size];
+
+                for (int i = 0; i < Count; i++)
+                    novo[i] = _internalStorage[i];
+
+                _internalStorage = novo;
+            }
+
+            _internalStorage[Count++] = item;
+        }
+
+        public bool RemoveAt(int index)
+        {
+            if (index >= Count || index < 0)
+            {
+                throw new IndexOutOfRangeException("Index izvan spremnika");
+            }
+            else
+            {
+                for (int i = index; i < Count - 1; i++)
+                    _internalStorage[i] = _internalStorage[i + 1];
+
+                Count--;
+                return true;
+            }
+        }
+
+        public bool Remove(int item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i] == item) return RemoveAt(i);
+            }
+            return false;
+        }
+
+        public int GetElement(int index)
+        {
+            if (index < Count && index >= 0)
+            {
+                return _internalStorage[index];
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("Index izvan spremnika");
+            }
+        }
+
+        public int IndexOf(int item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i] == item)
+                    return i;
+            }
+            return -1;
+        }
+
+        public void Clear()
+        {
+            Count = 0;
+        }
+
+        public bool Contains(int item)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (_internalStorage[i] == item) return true;
+            }
+            return false;
+        }
+    }
+}
